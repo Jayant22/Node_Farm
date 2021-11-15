@@ -18,7 +18,7 @@ const replaceTemplate = require('./modules/replaceTemplate');
 // });
 
 // const tempOverview = fs.readFileSync(`${__dirname}/template/overview`, 'utf-8', (err, data) => {});
-console.log('abc');
+
 const tempOverview = fs.readFileSync(
   `${__dirname}/templates/template-overview.html`,
   'utf-8'
@@ -36,7 +36,6 @@ const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
 const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }));
-console.log("Slugs:" + slugs.join(', '));
 
 const server = http.createServer((req, res) => {
   const { query, pathname } = url.parse(req.url, true);
@@ -49,17 +48,14 @@ const server = http.createServer((req, res) => {
       .join(' ');
 
     res.end(tempOverview.replace('{%PRODUCT_CARDS%}', cardsHTML));
-  }
-  else if (pathname === '/product') {
+  } else if (pathname === '/product') {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     const product = dataObj[query.id];
     res.end(replaceTemplate(tempProduct, product));
-  }
-  else if (pathname === '/api') {
+  } else if (pathname === '/api') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(data);
-  }
-  else {
+  } else {
     res.writeHead(404, {
       'Content-Type': 'text/html',
       'my-own-header': 'This Is Jayant',
